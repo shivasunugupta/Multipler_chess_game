@@ -1,0 +1,195 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, minmax(0, 1fr));
+            grid-template-rows: repeat(8, minmax(0, 1fr));
+            width: 400px;
+            height: 400px;
+            transform: rotate(0deg);
+        }
+
+        .piece.white {
+            color: white;
+            filter: drop-shadow(0 0 2px rgba(0, 0, 0, 1));
+        }
+
+        .piece.black {
+            color: black;
+        }
+
+        .flipped {
+            transform: rotate(180deg);
+        }
+
+        .square {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .square.light {
+            background-color: #f0d9b5;
+        }
+
+        .square.dark {
+            background-color: #b58863;
+        }
+
+        .piece {
+            font-size: 36px;
+            cursor: pointer;
+            font-family: "Segoe UI Symbol", "Arial Unicode MS",
+             "Noto Sans Symbols", "DejaVu Sans", sans-serif;
+
+        }
+
+        .piece.draggable {
+            cursor: grab;
+        }
+
+        .dragging {
+            opacity: 0.5;
+        }
+
+        /* Rotate pieces for black player */
+        .flipped .piece {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="w -full h-screen flex items-center justify-center bg-zinc-900">
+        <div class=" chessboard w-96 h-96 bg-red-400 "></div>
+    </div>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" 
+    integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" 
+    crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js" 
+    integrity="sha512-xRllwz2gdZciIB+AkEbeq+gVhX8VB8XsfqeFbUh+SzHlN96dEduwtTuVuc2u9EROlmW9+yhRlxjif66ORpsgVA==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="/js/chessgame.js"></script>
+
+</body>
+</html> -->
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= title %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .chessboard {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      width: 480px;
+      height: 480px;
+      position: relative;
+      border: 4px solid white;
+      box-sizing: border-box;
+    }
+
+    .square {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      position: relative;
+    }
+
+    .square.light {
+      background-color: #f0d9b5;
+    }
+
+    .square.dark {
+      background-color: #b58863;
+    }
+
+    .piece.white {
+      color: white;
+      filter: drop-shadow(0 0 2px black);
+    }
+
+    .piece.black {
+      color: black;
+    }
+
+    .highlight {
+      outline: 3px solid rgba(255, 255, 0, 0.8);
+      box-sizing: border-box;
+    }
+
+    .flipped {
+      transform: rotate(180deg);
+    }
+
+    .flipped .piece {
+      transform: rotate(180deg);
+    }
+
+    #loginModal input {
+      border: 1px solid #ccc;
+      padding: 6px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen">
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+    <div class="bg-white text-black p-6 rounded">
+      <h2 class="text-xl font-bold mb-4">Enter your name</h2>
+      <input id="usernameInput" type="text" placeholder="Your name" />
+      <button onclick="submitUsername()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Join Game</button>
+    </div>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="flex items-start gap-6 mt-6">
+    <!-- Player Info -->
+    <div class="flex flex-col items-center text-sm">
+      <div class="mb-2 text-left">
+        <p><strong>White:</strong> <span id="whiteName">Waiting...</span></p>
+        <p><strong>Black:</strong> <span id="blackName">Waiting...</span></p>
+      </div>
+      <div class="text-yellow-400 font-bold mb-4" id="timerDisplay">Timer: 60s</div>
+    </div>
+
+    <!-- Chessboard -->
+    <div class="chessboard"></div>
+
+    <!-- Move History -->
+    <div class="w-32">
+      <h2 class="text-lg font-bold mb-2">Moves</h2>
+      <ol id="moveHistory" class="list-decimal space-y-1 text-sm"></ol>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" 
+    integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" 
+    crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js" 
+    integrity="sha512-xRllwz2gdZciIB+AkEbeq+gVhX8VB8XsfqeFbUh+SzHlN96dEduwtTuVuc2u9EROlmW9+yhRlxjif66ORpsgVA==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="/js/chessgame.js"></script>
+</body>
+</html>
