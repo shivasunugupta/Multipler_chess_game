@@ -22,3 +22,4 @@ A real-time multiplayer chess game built using Node.js, Socket.IO, and Chess.js.
 
 ## Game Play
 ![image alt](https://github.com/shivasunugupta/Multipler_chess_game/blob/6172f54fac8ea2b971559117f290d4d719303a21/screenshots/Screenshot%202025-07-04%20115830.png)
+![image alt](https://github.com/shivasunugupta/Multipler_chess_game/blob/00ec972eb88e4287ccade5fa76acfe0e32fc819b/screenshots/Screenshot%202025-07-04%20014254.png)
